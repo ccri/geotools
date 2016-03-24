@@ -234,6 +234,10 @@ public class NetCDFReader extends AbstractGridCoverage2DReader implements Struct
             throw new RuntimeException(e);
         }
     }
+    @Override
+    public String getMetadataValue(String name) {
+        return this.getMetadataValue(defaultName, name);
+    }
 
     @Override
     public String getMetadataValue(String coverageName, String name) {
@@ -325,6 +329,12 @@ public class NetCDFReader extends AbstractGridCoverage2DReader implements Struct
     @Override
     public String[] getGridCoverageNames() {
         return (String[]) setNames.toArray(new String[setNames.size()]);
+    }
+
+    @Override
+    public Set<ParameterDescriptor<List>> getDynamicParameters()
+            throws IOException {
+        return getDynamicParameters(defaultName);
     }
 
     @Override
