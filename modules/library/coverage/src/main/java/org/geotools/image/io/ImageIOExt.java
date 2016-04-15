@@ -18,6 +18,7 @@ package org.geotools.image.io;
 
 import java.awt.image.RenderedImage;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Iterator;
@@ -236,9 +237,17 @@ public class ImageIOExt {
                     ImageInputStream stream = null;
                     try {
                         stream = spi.createInputStreamInstance(input, usecache, ImageIO.getCacheDirectory());
-                        break;
-                    } catch (IOException e) {
-                        return null;
+                        if (stream != null){
+                            try {
+                                stream.close();
+                                return spi;
+                            } catch (Throwable t){
+                                //eat exception
+                            }
+                        }
+                    } catch (Exception e) {
+                        System.out.println("here");
+                        //return null;
                     } finally {
                         //Make sure to close the created stream
                         if (stream != null){
@@ -250,12 +259,12 @@ public class ImageIOExt {
                         }
                     }
                 } else {
-                    break;
+                  return spi;
                 }
             }
         }
     
-        return spi;
+        return null;
     }
     
     /**
